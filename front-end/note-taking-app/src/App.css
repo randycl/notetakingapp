@@ -1,0 +1,78 @@
+.App {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+form {
+  margin: 20px 0;
+}
+
+input, textarea, select {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 1em;
+}
+
+button {
+  margin: 5px 0;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background: #f9f9f9;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+li h3 {
+  margin: 0;
+}
+
+li p {
+  margin: 5px 0;
+}
+
+button {
+  margin-right: 5px;
+}
+
+
+
+
+/* Randy Custom */
+li p b {
+  color: #11d;
+}
+
+.preserve-whitespace {
+      white-space: pre-wrap;
+}
+
+div form input, div form textarea {
+  width: 95%;
+}
