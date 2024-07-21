@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Define your environment variables here
         DOCKER_IMAGE_NAME = "notetakingapp"
         DOCKER_IMAGE_TAG = "latest"
     }
@@ -11,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the repository
-                git 'https://github.com/randycl/notetakingapp.git'
+                git branch: 'main', url: 'https://github.com/randycl/notetakingapp.git'
             }
         }
 
@@ -50,11 +49,9 @@ pipeline {
             """
         }
         success {
-            // Notify success
             echo 'Build and Docker packaging successful!'
         }
         failure {
-            // Notify failure
             echo 'Build or Docker packaging failed.'
         }
     }
