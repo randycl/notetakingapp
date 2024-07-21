@@ -4,9 +4,32 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = "notetakingapp"
         DOCKER_IMAGE_TAG = "latest"
+        MYSQL_ROOT_PASSWORD = 'rootpassword'
+        MYSQL_DATABASE = 'note_taking_app'
+        MYSQL_USER = 'noteuser'
+        MYSQL_PASSWORD = 'password'
     }
 
     stages {
+        stage('Start Database') {
+            steps {
+                script {
+                    // Start MariaDB container
+                    sh """
+                    docker run -d --name mariadb \
+                        -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
+                        -e MYSQL_DATABASE=${MYSQL_DATABASE} \
+                        -e MYSQL_USER=${MYSQL_USER} \
+                        -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                        -p 3306:3306 \
+                        mariadb:latest
+                    """
+                    // Wait for the database to be ready
+                    sleep 20
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 // Clone the repository
@@ -50,10 +73,12 @@ pipeline {
 
     post {
         always {
-            // Clean up Docker container
+            // Clean up Docker containers
             sh """
             docker stop ${DOCKER_IMAGE_NAME} || true
             docker rm ${DOCKER_IMAGE_NAME} || true
+            docker stop mariadb || true
+            docker rm mariadb || true
             """
         }
         success {
