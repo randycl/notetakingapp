@@ -22,16 +22,18 @@ pipeline {
                 }
             }
             steps {
-                // Run Maven to build the project
-                sh 'mvn clean package'
+                // Change to the directory containing the pom.xml and run Maven to build the project
+                dir('note-taking-app/note-taking-app') {
+                    sh 'mvn clean package'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                // Build the Docker image
+                // Build the Docker image from the correct context
                 sh """
-                docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
+                docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -f note-taking-app/note-taking-app/Dockerfile note-taking-app/note-taking-app
                 """
             }
         }
