@@ -8,9 +8,21 @@ pipeline {
         MYSQL_DATABASE = 'note_taking_app'
         MYSQL_USER = 'noteuser'
         MYSQL_PASSWORD = 'password'
+        MYSQL_HOST = 'mariadb'
     }
 
     stages {
+        stage('Setup Network') {
+            steps {
+                script {
+                    // Create a custom network if it doesn't exist
+                    sh """
+                    docker network create mynetwork || true
+                    """
+                }
+            }
+        }
+
         stage('Start Database') {
             steps {
                 script {
@@ -18,18 +30,24 @@ pipeline {
                     sh """
                     docker rm -f mariadb || true
                     """
-                    // Start MariaDB container
+                    // Start MariaDB container on custom network
                     sh """
-                    docker run -d --name mariadb \
+                    docker run -d --name mariadb --network mynetwork \
                         -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
                         -e MYSQL_DATABASE=${MYSQL_DATABASE} \
                         -e MYSQL_USER=${MYSQL_USER} \
                         -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-                        -p 3306:3306 \
                         mariadb:latest
                     """
-                    // Wait for the database to be ready
-                    sleep 60
+                    // Wait for the database to be ready by checking the health of the mariadb container
+                    sh """
+                    echo "Waiting for MariaDB to be ready..."
+                    while ! docker exec mariadb mysqladmin ping -hmariadb --silent; do
+                        echo "Waiting for MariaDB to be ready..."
+                        sleep 3
+                    done
+                    echo "MariaDB is ready!"
+                    """
                 }
             }
         }
@@ -45,7 +63,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.8.4-openjdk-17'
-                    args '-v /root/.m2:/root/.m2'
+                    args '-v /root/.m2:/root/.m2 --network=mynetwork'
                 }
             }
             steps {
@@ -67,9 +85,9 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                // Run the Docker container
+                // Run the Docker container on the custom network
                 sh """
-                docker run -d --name ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                 """
             }
         }
@@ -78,11 +96,11 @@ pipeline {
     post {
         always {
             // Clean up Docker containers
-            // docker stop mariadb || true
-            // docker rm mariadb || true
             sh """
             docker stop ${DOCKER_IMAGE_NAME} || true
             docker rm ${DOCKER_IMAGE_NAME} || true
+            docker stop mariadb || true
+            docker rm mariadb || true
             """
         }
         success {
