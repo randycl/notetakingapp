@@ -42,7 +42,7 @@ pipeline {
                     // Wait for the database to be ready by checking the health of the mariadb container
                     sh """
                     echo "Waiting for MariaDB to be ready..."
-                    while ! docker exec mariadb mysqladmin ping -hmariadb --silent; do
+                    while ! docker exec mariadb mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} -e "SELECT 1" > /dev/null 2>&1; do
                         echo "Waiting for MariaDB to be ready..."
                         sleep 3
                     done
