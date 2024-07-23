@@ -43,7 +43,7 @@ pipeline {
                     // Wait for the database to be ready by checking if the MariaDB port is open
                     sh """
                     echo "Waiting for MariaDB to be ready..."
-                    while ! docker exec mariadb sh -c 'nc -z localhost 3306'; do
+                    while ! docker exec mariadb sh -c 'mysqladmin ping -hlocalhost --silent'; do
                         echo "Waiting for MariaDB to be ready..."
                         sleep 3
                     done
