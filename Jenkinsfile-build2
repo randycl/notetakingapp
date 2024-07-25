@@ -1,0 +1,114 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_NAME = "notetakingapp"
+        DOCKER_IMAGE_TAG = "latest"
+        MYSQL_ROOT_PASSWORD = 'rootpassword'
+        MYSQL_DATABASE = 'note_taking_app'
+        MYSQL_USER = 'noteuser'
+        MYSQL_PASSWORD = 'password'
+        MYSQL_HOST = 'mariadb'
+    }
+
+    stages {
+        stage('Setup Network') {
+            steps {
+                script {
+                    // Create a custom network if it doesn't exist
+                    sh """
+                    docker network create mynetwork || true
+                    """
+                }
+            }
+        }
+
+        stage('Start Database') {
+            steps {
+                script {
+                    // Remove any existing mariadb container
+                    sh """
+                    docker rm -f mariadb || true
+                    """
+                    // Start MariaDB container on custom network with port mapping
+                    sh """
+                    docker run -d --name mariadb --network mynetwork \
+                        -p 3306:3306 \
+                        -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
+                        -e MYSQL_DATABASE=${MYSQL_DATABASE} \
+                        -e MYSQL_USER=${MYSQL_USER} \
+                        -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                        mariadb:latest
+                    """
+                    // Wait for the database to be ready by checking if the MariaDB port is open
+                    sh """
+                    echo "Waiting for MariaDB to be ready..."
+                    while ! docker exec mariadb sh -c 'mysqladmin ping -hlocalhost --silent'; do
+                        echo "Waiting for MariaDB to be ready..."
+                        sleep 3
+                    done
+                    echo "MariaDB is ready!"
+                    """
+                }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                // Clone the repository
+                git branch: 'main', url: 'https://github.com/randycl/notetakingapp.git'
+            }
+        }
+
+        stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.8.4-openjdk-17'
+                    args '-v /root/.m2:/root/.m2 --network=mynetwork'
+                }
+            }
+            steps {
+                // Change to the directory containing the pom.xml and run Maven to build the project
+                dir('note-taking-app/note-taking-app') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build the Docker image from the correct context
+                sh """
+                docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -f note-taking-app/note-taking-app/Dockerfile note-taking-app/note-taking-app
+                """
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                // Run the Docker container on the custom network
+                sh """
+                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up Docker containers
+            sh """
+            docker stop ${DOCKER_IMAGE_NAME} || true
+            docker rm ${DOCKER_IMAGE_NAME} || true
+            docker stop mariadb || true
+            docker rm mariadb || true
+            """
+        }
+        success {
+            echo 'Build and Docker packaging successful!'
+        }
+        failure {
+            echo 'Build or Docker packaging failed.'
+        }
+    }
+}
