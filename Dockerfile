@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy the pom.xml and source code to the container
 COPY note-taking-app/note-taking-app/pom.xml .
-RUN mvn dependency:go-offline
+#RUN mvn dependency:go-offline
 
 COPY note-taking-app/note-taking-app/src ./src
 RUN mvn clean
