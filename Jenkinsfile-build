@@ -29,7 +29,7 @@ pipeline {
             steps {
                 // Change to the directory containing the pom.xml and run Maven to build the project
                 dir('note-taking-app/note-taking-app') {
-                    sh 'mvn clean package'
+                    sh 'mvn -e -X clean package'
                 }
             }
         }
