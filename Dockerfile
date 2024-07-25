@@ -3,8 +3,8 @@ FROM maven:3.8.4-openjdk-11 AS build
 WORKDIR /app
 
 # Copy the pom.xml and source code to the container
-COPY pom.xml .
-COPY src ./src
+COPY note-taking-app/note-taking-app/pom.xml .
+COPY note-taking-app/note-taking-app/src ./src
 
 # Package the application
 RUN mvn clean package
