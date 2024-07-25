@@ -66,6 +66,7 @@ pipeline {
             //docker stop ${DOCKER_IMAGE_NAME} || true
             //docker rm ${DOCKER_IMAGE_NAME} || true
             //"""
+            echo 'always'
         }
         success {
             echo 'Build and Docker packaging successful!'
