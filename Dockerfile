@@ -1,16 +1,18 @@
 # Use an official Maven image to build the project
-FROM maven:3.8.4-openjdk-11 AS build
+FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
 
 # Copy the pom.xml and source code to the container
 COPY note-taking-app/note-taking-app/pom.xml .
+RUN mvn dependency:go-offline
+
 COPY note-taking-app/note-taking-app/src ./src
 
 # Package the application
-RUN mvn clean package
+RUN mvn -e -X clean package
 
 # Use an OpenJDK image to run the application
-FROM openjdk:11-jre-slim
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the packaged jar file from the build stage
