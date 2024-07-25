@@ -9,17 +9,4 @@ class NoteTakingAppApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-	
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Test
-    public String testDbConnection() {
-        try {
-            jdbcTemplate.execute("SELECT 1");
-            return "Database connection successful!";
-        } catch (Exception e) {
-            return "Database connection failed: " + e.getMessage();
-        }
-    }
 }
