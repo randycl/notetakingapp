@@ -4,7 +4,8 @@ pipeline {
       // Define the Dockerfile to use for the agent
       filename 'Dockerfile'
       // Define the custom network to use
-      args '--network=mynetwork'
+      args '-v $HOME/.m2:/root/.m2 --network=mynetwork'
+      reuseNode true
     }
   }
   environment {
@@ -15,7 +16,7 @@ pipeline {
         MYSQL_USER = 'noteuser'
         MYSQL_PASSWORD = 'password'
         MYSQL_HOST = 'mariadb'
-    }
+  }
   stages {
     stage('Test') {
       steps {
