@@ -9,6 +9,7 @@ RUN mvn dependency:go-offline
 COPY note-taking-app/note-taking-app/src ./src
 
 # Package the application
+RUN mvn --version
 RUN mvn test
 
 # Use an OpenJDK image to run the application
