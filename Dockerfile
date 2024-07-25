@@ -17,7 +17,7 @@ RUN ls -lta /app
 RUN ls -lta /app/src/test/java
 RUN ls -lta /app/src/test/resources
 RUN mvn --version
-RUN mvn build
+RUN mvn compile
 RUN mvn test
 
 # Use an OpenJDK image to run the application
