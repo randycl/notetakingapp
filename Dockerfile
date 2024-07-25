@@ -1,4 +1,4 @@
-# Use an official Maven image to build the project
+wo# Use an official Maven image to build the project
 FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN mvn --version
 RUN mvn compile
 RUN ls -lta target
 RUN uname -a
-RUN mvn test
+RUN --network=mynetwork mvn clean test
 
 # Use an OpenJDK image to run the application
 FROM openjdk:17-jdk-slim
