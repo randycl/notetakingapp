@@ -20,7 +20,7 @@ RUN mvn --version
 RUN mvn compile
 RUN ls -lta target
 RUN uname -a
-RUN mvn clean test
+RUN mvn test
 
 # Use an OpenJDK image to run the application
 FROM openjdk:17-jdk-slim
