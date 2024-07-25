@@ -19,6 +19,7 @@ RUN ls -lta /app/src/test/resources
 RUN mvn --version
 RUN mvn compile
 RUN ls -lta target
+RUN uname -a
 RUN mvn test
 
 # Use an OpenJDK image to run the application
