@@ -12,47 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('Setup Network') {
-            steps {
-                script {
-                    // Create a custom network if it doesn't exist
-                    sh """
-                    docker network create mynetwork || true
-                    """
-                }
-            }
-        }
-
-        stage('Start Database') {
-            steps {
-                script {
-                    // Remove any existing mariadb container
-                    sh """
-                    docker rm -f mariadb || true
-                    """
-                    // Start MariaDB container on custom network with port mapping
-                    sh """
-                    docker run -d --name mariadb --network mynetwork \
-                        -p 3306:3306 \
-                        -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
-                        -e MYSQL_DATABASE=${MYSQL_DATABASE} \
-                        -e MYSQL_USER=${MYSQL_USER} \
-                        -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-                        mariadb:latest
-                    """
-                    // Wait for the database to be ready by checking if the MariaDB port is open
-                    sh """
-                    echo "Waiting for MariaDB to be ready..."
-                    while ! docker exec mariadb sh -c 'mysqladmin ping -hlocalhost --silent'; do
-                        echo "Waiting for MariaDB to be ready..."
-                        sleep 3
-                    done
-                    echo "MariaDB is ready!"
-                    """
-                }
-            }
-        }
-
         stage('Checkout') {
             steps {
                 // Clone the repository
@@ -100,8 +59,6 @@ pipeline {
             sh """
             docker stop ${DOCKER_IMAGE_NAME} || true
             docker rm ${DOCKER_IMAGE_NAME} || true
-            docker stop mariadb || true
-            docker rm mariadb || true
             """
         }
         success {
