@@ -66,7 +66,8 @@ pipeline {
             //docker stop ${DOCKER_IMAGE_NAME} || true
             //docker rm ${DOCKER_IMAGE_NAME} || true
             //"""
-            echo 'always'
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            junit '**/target/surefire-reports/*.xml'
         }
         success {
             echo 'Build and Docker packaging successful!'
