@@ -9,7 +9,7 @@ RUN mvn dependency:go-offline
 COPY note-taking-app/note-taking-app/src ./src
 
 # Package the application
-RUN mvn clean package
+RUN mvn test
 
 # Use an OpenJDK image to run the application
 FROM openjdk:17-jdk-slim
