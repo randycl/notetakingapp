@@ -12,6 +12,7 @@ COPY note-taking-app/note-taking-app/src ./src
 COPY note-taking-app/note-taking-app/src/main/resources/application.properties src/test/resources/application.properties
 
 # Package the application
+RUN ls -lta /app
 RUN mvn --version
 RUN mvn test
 
