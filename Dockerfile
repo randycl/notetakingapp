@@ -8,6 +8,9 @@ RUN mvn dependency:go-offline
 
 COPY note-taking-app/note-taking-app/src ./src
 
+# Copy the application.properties into the test directory.
+COPY note-taking-app/note-taking-app/src/main/resources/application.properties src/test/resources/application.properties
+
 # Package the application
 RUN mvn --version
 RUN mvn test
