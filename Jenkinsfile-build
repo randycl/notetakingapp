@@ -29,7 +29,7 @@ pipeline {
             steps {
                 // Change to the directory containing the pom.xml and run Maven to build the project
                 dir('note-taking-app/note-taking-app') {
-                    sh 'mvn -e -X clean package'
+                    sh 'mvn clean package'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 // Build the Docker image from the correct context
                 sh """
-               docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -f Dockerfile .
+                docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -f Dockerfile .
                 """
 
             }
@@ -53,7 +53,7 @@ pipeline {
 
                 // Dump logs
                 sh """
-               docker logs ${DOCKER_IMAGE_NAME}
+                docker logs ${DOCKER_IMAGE_NAME}
                 """
             }
         }
@@ -62,10 +62,10 @@ pipeline {
     post {
         always {
             // Clean up Docker containers
-            sh """
-            docker stop ${DOCKER_IMAGE_NAME} || true
-            docker rm ${DOCKER_IMAGE_NAME} || true
-            """
+            //sh """
+            //docker stop ${DOCKER_IMAGE_NAME} || true
+            //docker rm ${DOCKER_IMAGE_NAME} || true
+            //"""
         }
         success {
             echo 'Build and Docker packaging successful!'
