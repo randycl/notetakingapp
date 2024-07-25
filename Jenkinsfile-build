@@ -24,6 +24,7 @@ pipeline {
                 docker {
                     image 'maven:3.8.4-openjdk-17'
                     args '-v /root/.m2:/root/.m2 --network=mynetwork'
+                    reuseNode true
                 }
             }
             steps {
