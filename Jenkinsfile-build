@@ -31,6 +31,10 @@ pipeline {
                 // Change to the directory containing the pom.xml and run Maven to build the project
                 dir('note-taking-app/note-taking-app') {
                     sh 'mvn clean package'
+
+                    sh 'mkdir /app'
+
+                    sh 'cp ./target/*.jar /app'
                 }
             }
         }
@@ -39,7 +43,7 @@ pipeline {
             steps {
                 // Build the Docker image from the correct context
                 sh """
-                docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -v app:/app -f Dockerfile .
+                docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -f Dockerfile .
                 """
 
             }
@@ -49,7 +53,7 @@ pipeline {
             steps {
                 // Run the Docker container on the custom network
                 sh """
-                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork -v app:/app -${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork -v ./app:/app -${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                 """
 
                 // Dump logs
