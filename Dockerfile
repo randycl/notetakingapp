@@ -38,4 +38,4 @@ EXPOSE 8080
 
 # Run the application
 #ENTRYPOINT ["java", "-jar", "/app/notetakingapp.jar"]
-ENTRYPOINT ["tail", "-f", "/dev/null", "&&", "java", "-jar", "/app/note-taking-app-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
