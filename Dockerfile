@@ -26,6 +26,9 @@ RUN mvn test
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
+RUN echo openjdk-17
+RUN java --version
+
 # Copy the packaged jar file from the build stage
 COPY --from=build /app/target/notetakingapp-*.jar /app/notetakingapp.jar
 
