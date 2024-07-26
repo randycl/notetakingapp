@@ -32,8 +32,6 @@ pipeline {
                 dir('note-taking-app/note-taking-app') {
                     sh 'mvn clean package'
 
-                    sh 'mkdir /app' || true
-
                     sh 'cp ./target/*.jar /app'
                 }
             }
