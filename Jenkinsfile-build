@@ -32,7 +32,7 @@ pipeline {
                 dir('note-taking-app/note-taking-app') {
                     sh 'mvn clean package'
 
-                    sh 'cp ./target/*.jar /app'
+                    sh 'cp ./target/note*.jar /app/notetakingapp.jar'
                 }
             }
         }
