@@ -51,7 +51,7 @@ pipeline {
             steps {
                 // Run the Docker container on the custom network
                 sh """
-                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork -v /app:/app ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork -p 8080:8080 -v /app:/app ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                 """
 
                 sh """
