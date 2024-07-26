@@ -37,4 +37,5 @@ RUN ls -lta /app
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/app/notetakingapp.jar"]
+#ENTRYPOINT ["java", "-jar", "/app/notetakingapp.jar"]
+ENTRYPOINT ["/bin/sh" "/entrypoint.sh"]
