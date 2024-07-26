@@ -23,7 +23,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.8.4-openjdk-17'
-                    args '-v $HOME/.m2:/root/.m2 -v app:/app --network=mynetwork'
+                    args '-v $HOME/.m2:/root/.m2 -v ./app:/app --network=mynetwork'
                     // reuseNode true
                 }
             }
