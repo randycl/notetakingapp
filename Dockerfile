@@ -31,6 +31,7 @@ RUN java --version
 
 # Copy the packaged jar file from the build stage
 COPY --from=build /app/target/notetakingapp-*.jar /app/notetakingapp.jar
+RUN ls -lta /app
 
 # Expose the port your application runs on
 EXPOSE 8080
