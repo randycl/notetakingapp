@@ -54,6 +54,10 @@ pipeline {
                 docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork -v /app:/app ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                 """
 
+                sh """
+                docker exec ${DOCKER_IMAGE_NAME} ls -lta /app
+                """
+
                 // Dump logs
                 sh """
                 docker logs ${DOCKER_IMAGE_NAME}
