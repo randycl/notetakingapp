@@ -55,4 +55,8 @@ public class NoteController {
     public void deleteNote(@PathVariable Long id) {
         noteRepository.deleteById(id);
     }
+
+    public void dummy() {
+	    // THis is a blank method.
+	    System.out.println("dummy");
 }
