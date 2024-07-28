@@ -69,10 +69,10 @@ pipeline {
     post {
         always {
             // Clean up Docker containers
-            sh """
-            docker stop ${DOCKER_IMAGE_NAME} || true
-            docker rm ${DOCKER_IMAGE_NAME} || true
-            """
+            //sh """
+            //docker stop ${DOCKER_IMAGE_NAME} || true
+            //docker rm ${DOCKER_IMAGE_NAME} || true
+            //"""
             archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
             junit '**/target/surefire-reports/*.xml'
         }
