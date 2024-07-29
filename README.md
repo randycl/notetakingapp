@@ -36,6 +36,6 @@ Here are the steps to ensure your Jenkins is correctly set up to use Docker agen
 *	Enabled: Check the box.
 
 4. Use the Docker Agent in Your Pipeline
-Update your Jenkinsfile to use the label specified in the Docker Agent Template. Here's the updated Jenkinsfile:
+Update your Jenkinsfile to use the label specified in the Docker Agent Template. (Use Jenkinsfile-build)
 
 
