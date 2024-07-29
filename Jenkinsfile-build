@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+         stage('Build') {
             agent {
                 docker {
                     image 'maven:3.8.4-openjdk-17'
@@ -27,10 +27,8 @@ pipeline {
                 }
             }
             steps {
-                // Change to the directory containing the pom.xml and run Maven to build the project
                 dir('note-taking-app/note-taking-app') {
                     sh 'mvn clean package'
-
                     sh 'cp ./target/note*.jar /app/notetakingapp.jar'
                 }
             }
