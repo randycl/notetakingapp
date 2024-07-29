@@ -19,19 +19,21 @@ Here are the steps to ensure your Jenkins is correctly set up to use Docker agen
     2.	Scroll down to the Cloud section and click Add a new cloud.
     3.	Select Docker.
     4.	Configure the Docker Cloud:
-•	Docker Host URI: unix:///var/run/docker.sock
-•	Enabled: Check the box.
-•	Name: Docker (or any name you prefer)
+       
+*	Docker Host URI: unix:///var/run/docker.sock
+*	Enabled: Check the box.
+*	Name: Docker (or any name you prefer)
 
 3. Create a Docker Agent Template
     1.	In the Docker Cloud configuration, click Add Docker Template.
     2.	Configure the Docker Agent Template:
-•	Labels: docker-agent
-•	Docker Image: maven:3.8.4-openjdk-17 (or any other image you need)
-•	Remote File System Root: /home/jenkins/agent
-•	Instance Capacity: 1
-•	Usage: Only build jobs with label expressions matching this node
-•	Enabled: Check the box.
+
+*	Labels: docker-agent
+*	Docker Image: maven:3.8.4-openjdk-17 (or any other image you need)
+*	Remote File System Root: /home/jenkins/agent
+*	Instance Capacity: 1
+*	Usage: Only build jobs with label expressions matching this node
+*	Enabled: Check the box.
 
 4. Use the Docker Agent in Your Pipeline
 Update your Jenkinsfile to use the label specified in the Docker Agent Template. Here's the updated Jenkinsfile:
