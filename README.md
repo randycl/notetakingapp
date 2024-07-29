@@ -3,8 +3,8 @@ react project
 
 1. A Jenkins docker container is created to build the container with docker added to it.  See the Dockerfile-jenkins for the code.
 2. Run the docker container:
-   sudo docker build -t jenkins-withdocker .
-   sudo docker run -p 8089:8080 -v /var/run/docker.sock:/var/run/docker.sock --name jenkins jenkins-withdocker
+   * sudo docker build -t jenkins-withdocker .
+   * sudo docker run -p 8089:8080 -v /var/run/docker.sock:/var/run/docker.sock --name jenkins jenkins-withdocker
    
 # Jenkins Docker agent setup
 Here are the steps to ensure your Jenkins is correctly set up to use Docker agents:
