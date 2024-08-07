@@ -52,7 +52,7 @@ pipeline {
                 """
 
                 sh """
-                docker exec ${DOCKER_IMAGE_NAME} ls -lta /app
+                docker exec ${DOCKER_IMAGE_NAME} echo ${MYSQL_USER}
                 """
 
                 // Dump logs
