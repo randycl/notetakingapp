@@ -28,8 +28,6 @@ WORKDIR /app
 
 RUN echo openjdk-17
 RUN java --version
-RUN export MYSQL_USER=${MYSQL_USER}
-RUN export MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
 # Copy the packaged jar file from the build stage
 COPY --from=build /app/target/notetakingapp-*.jar /app/notetakingapp.jar
