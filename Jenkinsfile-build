@@ -4,10 +4,10 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = "notetakingapp"
         DOCKER_IMAGE_TAG = "latest"
-        MYSQL_ROOT_PASSWORD = "${env.MYSQL_ROOT_PASSWORD}"
+        MYSQL_ROOT_PASSWORD = "${MYSQL_ROOT_PASSWORD}"
         MYSQL_DATABASE = 'note_taking_app'
-        MYSQL_USER = "${env.MYSQL_USER}"
-        MYSQL_PASSWORD = "${env.MYSQL_PASSWORD}"
+        MYSQL_USER = "${MYSQL_USER}"
+        MYSQL_PASSWORD = "${MYSQL_PASSWORD}"
         MYSQL_HOST = 'mariadb'
     }
 
@@ -48,11 +48,11 @@ pipeline {
             steps {
                 // Run the Docker container on the custom network
                 sh """
-                docker run -d --name ${DOCKER_IMAGE_NAME} --network mynetwork -p 8080:8080 -v /app:/app ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                docker run -d --name ${DOCKER_IMAGE_NAME} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} --network mynetwork -p 8080:8080 -v /app:/app ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                 """
 
                 sh """
-                docker exec ${DOCKER_IMAGE_NAME} echo \${MYSQL_USER}
+                docker exec ${DOCKER_IMAGE_NAME} env
                 """
 
                 // Dump logs
