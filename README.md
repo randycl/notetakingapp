@@ -1,5 +1,5 @@
 # notetakingapp
-react project
+This is the backend for the project.  There are three parts: 1) backend written in java using spring, 2) frontend written in node + vite, and 3) A mysql/mariadb database.
 
 1. A Jenkins docker container is created to build the container with docker added to it.  See the Dockerfile-jenkins for the code.
 2. Run the docker container:
