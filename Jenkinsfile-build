@@ -44,22 +44,32 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                // Run the Docker container on the custom network
-                sh """
-                docker run -d --name ${DOCKER_IMAGE_NAME} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} --network mynetwork -p 8080:8080 -v /app:/app ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
-                """
+    stage('Run Docker Container') {
+        steps {
+            sh """
+            # Check if container is already running
+            if [ \$(docker ps -q -f name=${DOCKER_IMAGE_NAME}) ]; then
+                echo "Container ${DOCKER_IMAGE_NAME} is already running."
+            elif [ \$(docker ps -aq -f name=${DOCKER_IMAGE_NAME}) ]; then
+                echo "Container ${DOCKER_IMAGE_NAME} exists but is not running. Starting it..."
+                docker start ${DOCKER_IMAGE_NAME}
+            else
+                echo "No existing container. Creating a new one..."
+                docker run -d --name ${DOCKER_IMAGE_NAME} \\
+                    -e MYSQL_USER=${MYSQL_USER} \\
+                    -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \\
+                    --network mynetwork \\
+                    -p 8080:8080 \\
+                    -v /app:/app \\
+                    ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+            fi
+            """
 
-                sh """
-                docker exec ${DOCKER_IMAGE_NAME} env
-                """
-
-                // Dump logs
-                sh """
-                docker logs ${DOCKER_IMAGE_NAME}
-                """
-            }
+            // Optional: print environment and logs
+            sh """
+            docker exec ${DOCKER_IMAGE_NAME} env || true
+            docker logs ${DOCKER_IMAGE_NAME} || true
+            """
         }
     }
 
